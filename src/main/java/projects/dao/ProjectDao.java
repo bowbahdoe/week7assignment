@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.mysql.cj.jdbc.MysqlDataSource;
 import projects.entity.Category;
 import projects.entity.Material;
 import projects.entity.Project;
@@ -18,13 +19,20 @@ import projects.entity.Step;
 import projects.exception.DbException;
 import provided.util.DaoBase;
 
+import javax.sql.DataSource;
+
 public class ProjectDao extends DaoBase {
+    private final DataSource db;
 
     private static final String CATEGORY_TABLE = "category";
     private static final String MATERIAL_TABLE = "material";
     private static final String PROJECT_TABLE = "project";
     private static final String PROJECT_CATEGORY_TABLE = "project_category";
     private static final String STEP_TABLE = "step";
+
+    public ProjectDao(DataSource db) {
+        this.db = db;
+    }
 
     public List<Project> fetchAllProjects() {
         String sql = "SELECT * FROM " + PROJECT_TABLE + " ORDER BY project_name";

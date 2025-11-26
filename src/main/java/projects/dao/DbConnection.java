@@ -1,10 +1,8 @@
 package projects.dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import com.mysql.cj.jdbc.MysqlDataSource;
 
-import projects.exception.DbException;
+import javax.sql.DataSource;
 
 public class DbConnection {
 
@@ -14,19 +12,12 @@ public class DbConnection {
     private static String SCHEMA = "projects";
     private static String USER = "projects";
 
-    public static Connection getConnection() {
+    public static DataSource getDataSource() {
+        MysqlDataSource db = new MysqlDataSource();
         String uri = String.format("jdbc:mysql://%s:%d/%s?user=%s&password=%s&useSSL=false",
                 HOST, PORT, SCHEMA, USER, PASSWORD);
 
-        System.out.println("Connecting uri" + uri);
-
-        try {
-            Connection conn = DriverManager.getConnection(uri);
-            System.out.println("Connection successful");
-            return conn;
-        } catch (SQLException e) {
-            throw new DbException(e);
-        }
+        db.setUrl(uri);
+        return db;
     }
-
 }

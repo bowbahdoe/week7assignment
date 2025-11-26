@@ -9,6 +9,12 @@ import projects.entity.Project;
 
 public class ProjectService {
 
+    private final ProjectDao projectDao;
+
+    public ProjectService(ProjectDao projectDao) {
+        this.projectDao = projectDao;
+    }
+
     public Project addProject(Project project) {
         return projectDao.insertProject(project);
     }
@@ -19,7 +25,6 @@ public class ProjectService {
      *
      *  @return A list of project records.
      */
-    private ProjectDao projectDao = new ProjectDao();
 
     public List<Project> fetchAllProjects() {
         return projectDao.fetchAllProjects();

@@ -5,17 +5,28 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
+import com.mysql.cj.jdbc.MysqlDataSource;
+import projects.dao.DbConnection;
+import projects.dao.ProjectDao;
 import projects.entity.Project;
 import projects.exception.DbException;
 import projects.service.ProjectService;
+
+import javax.sql.DataSource;
 
 //import projects.dao.DbConnection;
 
 public class ProjectsApp {
 
     private Scanner scanner = new Scanner(System.in);
-    private ProjectService projectService = new ProjectService();
+    private final ProjectService projectService;
     private Project curProject;
+
+    ProjectsApp() {
+        DataSource db = DbConnection.getDataSource();
+        ProjectDao projectDao = new ProjectDao(db);
+        projectService = new ProjectService(projectDao);
+    }
 
     public static void main(String[] args) {
 //		DbConnection.getConnection();
