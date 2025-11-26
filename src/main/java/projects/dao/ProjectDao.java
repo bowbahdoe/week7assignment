@@ -24,20 +24,14 @@ import javax.sql.DataSource;
 public class ProjectDao extends DaoBase {
     private final DataSource db;
 
-    private static final String CATEGORY_TABLE = "category";
-    private static final String MATERIAL_TABLE = "material";
-    private static final String PROJECT_TABLE = "project";
-    private static final String PROJECT_CATEGORY_TABLE = "project_category";
-    private static final String STEP_TABLE = "step";
-
     public ProjectDao(DataSource db) {
         this.db = db;
     }
 
     public List<Project> fetchAllProjects() {
-        String sql = "SELECT * FROM " + PROJECT_TABLE + " ORDER BY project_name";
+        String sql = "SELECT * FROM project ORDER BY project_name";
 
-        try (Connection conn = DbConnection.getConnection()) {
+        try (Connection conn = db.getConnection()) {
             startTransaction(conn);
 
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -61,14 +55,14 @@ public class ProjectDao extends DaoBase {
 
     public Project insertProject(Project project) {
         // @formatter:off
-		String sql = ""
-				+ "INSERT INTO " + PROJECT_TABLE + " "
-				+ "(project_name, estimated_hours, actual_hours, difficulty, notes) "
-				+ "VALUES "
-				+ "(?, ?, ?, ?, ?)";
+		String sql = """
+                INSERT INTO project
+                (project_name, estimated_hours, actual_hours, difficulty, notes)
+                VALUES (?, ?, ?, ? ,?)
+                """;
 		// @formatter:on
 
-        try (Connection conn = DbConnection.getConnection()) {
+        try (Connection conn = db.getConnection()) {
             startTransaction(conn);
 
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -80,7 +74,7 @@ public class ProjectDao extends DaoBase {
 
                 stmt.executeUpdate();
 
-                Integer projectId = getLastInsertId(conn, PROJECT_TABLE);
+                Integer projectId = getLastInsertId(conn, "project");
                 commitTransaction(conn);
 
                 project.setProjectId(projectId);
@@ -95,9 +89,9 @@ public class ProjectDao extends DaoBase {
     }
 
     public Optional<Project> fetchProjectById(Integer projectId) {
-        String sql = "SELECT * FROM " + PROJECT_TABLE + " WHERE project_id = ?";
+        String sql = "SELECT * FROM project WHERE project_id = ?";
 
-        try (Connection conn = DbConnection.getConnection()) {
+        try (Connection conn = db.getConnection()) {
             startTransaction(conn);
 
             try {
@@ -132,10 +126,11 @@ public class ProjectDao extends DaoBase {
 
     private List<Category> fetchCategoriesForProject(Connection conn, Integer projectId) throws SQLException {
         //@formatter:off
-		String sql = ""
-				+ "SELECT c.* FROM " + CATEGORY_TABLE + " c "
-				+ "JOIN " + PROJECT_CATEGORY_TABLE + " pc USING (category_id) "
-				+ "WHERE project_id = ?";
+        String sql = """
+                SELECT c.* FROM category c
+                JOIN project_category pc USING (category_id)
+                WHERE project_id = ?
+                """;
 		//@formatter:on
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -154,7 +149,7 @@ public class ProjectDao extends DaoBase {
     }
 
     private List<Step> fetchStepsForProject(Connection conn, Integer projectId) throws SQLException {
-        String sql = "SELECT * FROM " + STEP_TABLE + " WHERE project_id = ?";
+        String sql = "SELECT * FROM step WHERE project_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             setParameter(stmt, 1, projectId, Integer.class);
@@ -172,7 +167,7 @@ public class ProjectDao extends DaoBase {
     }
 
     private List<Material> fetchMaterialsForProject(Connection conn, Integer projectId) throws SQLException {
-        String sql = "SELECT * FROM " + MATERIAL_TABLE + " WHERE project_id = ?";
+        String sql = "SELECT * FROM material WHERE project_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             setParameter(stmt, 1, projectId, Integer.class);
