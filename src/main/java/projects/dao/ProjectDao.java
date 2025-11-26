@@ -5,11 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
 import projects.entity.Category;
@@ -36,7 +32,7 @@ public class ProjectDao extends DaoBase {
 
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 try (ResultSet rs = stmt.executeQuery()) {
-                    List<Project> projects = new LinkedList<>();
+                    List<Project> projects = new ArrayList<>();
 
                     while (rs.next()) {
                         projects.add(extract(rs, Project.class));
@@ -137,7 +133,7 @@ public class ProjectDao extends DaoBase {
             setParameter(stmt, 1, projectId, Integer.class);
 
             try (ResultSet rs = stmt.executeQuery()) {
-                List<Category> categories = new LinkedList<>();
+                List<Category> categories = new ArrayList<>();
 
                 while (rs.next()) {
                     categories.add(extract(rs, Category.class));
@@ -155,7 +151,7 @@ public class ProjectDao extends DaoBase {
             setParameter(stmt, 1, projectId, Integer.class);
 
             try (ResultSet rs = stmt.executeQuery()) {
-                List<Step> steps = new LinkedList<>();
+                List<Step> steps = new ArrayList<>();
 
                 while (rs.next()) {
                     steps.add(extract(rs, Step.class));
@@ -173,7 +169,7 @@ public class ProjectDao extends DaoBase {
             setParameter(stmt, 1, projectId, Integer.class);
 
             try (ResultSet rs = stmt.executeQuery()) {
-                List<Material> materials = new LinkedList<>();
+                List<Material> materials = new ArrayList<>();
 
                 while (rs.next()) {
                     materials.add(extract(rs, Material.class));

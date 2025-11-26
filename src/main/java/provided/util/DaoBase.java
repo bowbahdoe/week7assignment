@@ -218,7 +218,7 @@ public abstract class DaoBase {
    * unchanged. So, class Recipe has an instance variable:
    * 
    * <pre>
-   * List<Ingredient> ingredients = new LinkedList<>();
+   * List<Ingredient> ingredients = new ArrayList<>();
    * </pre>
    * 
    * Since the result set does not contain a column named "ingredients", the value is left alone and

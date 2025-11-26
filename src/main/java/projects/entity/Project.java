@@ -4,7 +4,7 @@
 package projects.entity;
 
 import java.math.BigDecimal;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,9 +19,9 @@ public class Project {
     private Integer difficulty;
     private String notes;
 
-    private List<Material> materials = new LinkedList<>();
-    private List<Step> steps = new LinkedList<>();
-    private List<Category> categories = new LinkedList<>();
+    private List<Material> materials = new ArrayList<>();
+    private List<Step> steps = new ArrayList<>();
+    private List<Category> categories = new ArrayList<>();
 
     public Integer getProjectId() {
         return projectId;
